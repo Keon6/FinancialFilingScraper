@@ -7,12 +7,19 @@ The code is not finished and is pretty bad in terms of runtime. Really a lack of
 ## Getting Started
 ### Prerequisites
 Following Python Packages are required:
+
 Selenium (https://www.seleniumhq.org/download/)
+
 BeautifulSoup (https://www.crummy.com/software/BeautifulSoup/)
+
 Pandas Datareader (http://pandas-datareader.readthedocs.io/en/latest/)
+
 Google Finance (https://pypi.org/project/googlefinance/)
+
 urllib
+
 csv
+
 collections
 
 
