@@ -212,7 +212,7 @@ class EquityData:
         self.wanted_data = dict()
         self.url_filing_list = dict()
 
-    def _extract_transform_load(self):
+    def etl(self):
         """
         Scrape data from SEC.gov
         :return:
@@ -236,11 +236,11 @@ class EquityData:
                 line_html = soup.find_all("tr")
                 text = html_to_text(line_html)
                 # Transform
-                self.clean(text)
+                self._transform(text)
                 # Load
                 self._html_list.append(html)
                 self._line_html_list.append(line_html)
-                self.money_scale_list.append(self.money_scale(html))
+                self.money_scale_list.append(self._money_scale(html))
                 self._text_list.append(text)
             if self._document_type == "10-K":
                 # Extract
@@ -252,11 +252,11 @@ class EquityData:
                 line_html = soup.find_all("tr")
                 text = html_to_text(line_html)
                 # Transform
-                self.clean(text)
+                self._transform(text)
                 # Load
                 self._html_list.append(html)
                 self._line_html_list.append(line_html)
-                self.money_scale_list.append(self.money_scale(html))
+                self.money_scale_list.append(self._money_scale(html))
                 self._text_list.append(text)
             driver.back()
             driver.back()
@@ -294,12 +294,18 @@ class EquityData:
 
     #WORK ON THIS
     @staticmethod
-    def money_scale(html):
+    def _money_scale(html):
         # O(n)
         """ This function checks if the reported dollar amounts are in thousands or in millions.
         In each report it says either 'dollars in millions' or 'dollars in thousands'
         NOTE: ALWAYS CALL BEFORE PRETTIFY()
         :return: String saying thousands or millions of dollars in scale
+        """
+        """
+        TODO:
+        1) Figure out why I wrote algo like this?
+        2) Figure out whether I can use string search algo (Rabin-Karp? Other?)
+        
         """
         for i in range(0, len(html) - 10000):
             if (html[i] == 'n' and html[i + 3] == 'i' and html[i + 5] == 'l' and html[i + 7] == 'o'
@@ -317,7 +323,7 @@ class EquityData:
 
     #WORK ON THIS
     @staticmethod
-    def clean(text_file):
+    def _transform(text_file):
         #O(n)
         """ This function should remove unnecessary elements and standardize the format of all financial files
         NOTE: DON"T CALL THIS BEFORE CALLING money_scale()
@@ -344,7 +350,7 @@ class EquityData:
         remove_item_ranged('', text_file, 0)
         remove_item_ranged('Consolidated', text_file, 0)
 
-    def insert_into_dict(self, w, text_file): #May be use sorting to decreas time complexity
+    def _load(self, w, text_file): #May be use sorting to decreas time complexity
         for i in range(0, len(text_file)):
             if text_file[i].find(w) == 0:
                 # Case 1: with $
@@ -532,7 +538,7 @@ pfg = s.historical_data('google', '2015-01-01')
 
 
 # create_csv(pfg, "pfg.csv")
-s.insert_into_dict("Cash and cash equivalents", s._text_list[1])
+s.load_data("Cash and cash equivalents", s._text_list[1])
 for e in s._text_list[1]:
     print(e)
 print(s.load_data())
