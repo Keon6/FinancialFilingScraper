@@ -1,8 +1,5 @@
 # FinancialFilingScraper
-Project to extract, transform, and load (ETL) data from financial statements of publicly traded companies. 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Project to extract, transform, and load (ETL) data from financial statements of publicly traded companies. So far, only supports companies listed on the NASDAQ or the NYSE, which are the ones whose filings are availabe from the U.S. Securities and Exchange Commission website (https://www.sec.gov)
 
 ### Prerequisites
 Following Python Packages are required:
@@ -27,5 +24,5 @@ Use the Code as a Python Package to easily transform any financial filing data .
 
 ## Authors
 
-* **Keon Shik (Kevin) Kim ** - *Initial work* - [Keon6](https://github.com/Keon6)
+* **Keon Shik (Kevin) Kim ** - [Keon6](https://github.com/Keon6)
 
