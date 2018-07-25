@@ -1,6 +1,3 @@
-
-# TASKS:
-# 1. FIX the code so that EquityData() object gives financial data for the last x years
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from googlefinance import getQuotes
@@ -11,7 +8,6 @@ import urllib.request
 dir(urllib.request)
 
 '''
-DOCUMENTATION:
 This file contains all Objects that has to deal with reading and sorting financial files.
 Such files include historical stock prices, and financial filings like 10-K and 10-Q.
 An object that creates CSV file also exists.
@@ -23,10 +19,8 @@ __credits__ = ["Keon Shik (Kevin) Kim"]
 __version__ = 0.0.2
 __maintainers__ = ["Keon Shik (Kevin) Kim"]
 __email__ = ["kevinkim1207@gmail.com"]
+__github__ = ["https://github.com/Keon6"]
 '''
-
-
-
 
 #PROBLEM: RUNNIG TIME IS TOO LONG
 
@@ -76,36 +70,57 @@ def rabin_karp_multiple_pattern_search(string, substring_list):
         hs = hash(string[i+1:i+m+1])
     return -1
 
+
+def knuth_morris_pratt_pattern_search(string, substring):
+    """
+    KMP search main algorithm: String -> String -> [Int]
+    Return all the matching position of pattern string P in S
+    """
+
+    def partial(pattern):
+        """ Calculate partial match table: String -> [Int]"""
+        ret = [0]
+        for i in range(1, len(pattern)):
+            j = ret[i - 1]
+            while j > 0 and pattern[j] != pattern[i]:
+                j = ret[j - 1]
+            ret.append(j + 1 if pattern[j] == pattern[i] else j)
+        return ret
+
+    partial, ret, j = partial(substring), [], 0
+    for i in range(len(string)):
+        while j > 0 and string[i] != substring[j]:
+            j = partial[j - 1]
+        if string[i] == substring[j]: j += 1
+        if j == len(substring):
+            ret.append(i - (j - 1))
+            j = 0
+    if not ret:
+        return -1
+    return ret
+
+
 #WORK OM IT
-def remove_item(substring_list, string_list, self_or_not): #WORK an SORTING SO THAT I COULD IMPLEMENT BINARY SEEARCH
+def remove_item(substring_list, string_list): #WORK an SORTING SO THAT I COULD IMPLEMENT BINARY SEEARCH
     """ Goes through a list and removes any element that contains the given substring
 
     :param substring_list: If the string contains the following substring, then remove it
     :param string_list: List we want to go through
-    :param self_or_not: If substring == string, then False. If substring is contained, then True.
     :return:
     """
-
+    new_string_list = []
     for string in string_list:
-        if rabin_karp_multiple_pattern_search(string, substring_list) != 1:
-            string_list.pop(string)
-
-
-    counter = 0
-    back_counter = len(string_list)
-    while counter < back_counter:
-        if self_or_not is True:
-            if string_list[counter].find(substring_list) != -1:
-                string_list.pop(counter)
-                back_counter = back_counter - 1
+        if len(substring_list) == 1:
+            if knuth_morris_pratt_pattern_search(string, substring_list[0]) != -1:
+                continue
             else:
-                counter = counter + 1
+                new_string_list.append(string)
         else:
-            if string_list[counter] == substring_list:
-                string_list.pop(counter)
-                back_counter = back_counter - 1
+            if rabin_karp_multiple_pattern_search(string, substring_list) != 1:
+                continue
             else:
-                counter = counter + 1
+                new_string_list.append(string)
+    return new_string_list
 
 
 def remove_item_ranged(substring, li, rng):#WORK an SORTING SO THAT I COULD IMPLEMENT BINARY SEEARCH
@@ -340,13 +355,18 @@ class EquityData:
                 bc = bc - 1
             else:
                 c = c + 1
-        substring_list = ['Delaware', 'California', 'January', 'February', 'March', 'April', 'May', 'June', 'July',
-                          'August', 'September', 'October', 'November', 'December', 'PART', 'ITEM', 'Item', 'XBRL',
-                          'Quarter Ended', 'Statements', 'Sheets', 'Page', 'CommonStock', 'Exhibit', 'Date', '●', '•',
-                          'Section', 'Agreement', 'Bylaw', 'Form', 'Rule', 'Note', 'SIGNATURE', 'Emerging', 'Glossary',
-                          'Summary', 'Events', 'Supplemental', 'Business', 'QUARTERLY', 'INDEX', 'SECURITIES EXCHANGE',
-                          'Standard & Poor’s', 'Moody’s']
-        remove_item
+
+        substring_lists = [['●', '•'], ['May'], ['June', 'July', 'PART', 'ITEM', 'Item', 'XBRL', 'Page', 'Date', 'Form', 'Rule', 'Note'],
+                           ['March', 'April', 'Bylaw', 'INDEX'], ['August',  'Sheets', 'Events'],
+                           ['January', 'October', 'Exhibit', 'Section', 'Moody’s', 'Summary'],
+                           ['Delaware', 'November', 'February', 'December', 'Business', 'Emerging', 'Glossary'],
+                           ['September', 'Agreement', 'QUARTERLY', 'SIGNATURE'], ['California', 'Statements'],
+                           ['CommonStock'], ['Supplemental'], ['Quarter Ended'], ['Standard & Poor’s'],
+                           ['SECURITIES EXCHANGE']]
+
+        for substring_list in substring_lists:
+            text_file = remove_item(substring_list, text_file)
+
         remove_item_ranged('', text_file, 0)
         remove_item_ranged('Consolidated', text_file, 0)
 
