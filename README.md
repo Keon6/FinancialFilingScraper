@@ -31,7 +31,7 @@ Use the Code as a Python Package to easily transform any financial filing data .
 
 ## Versioning
 
-0.0.1
+0.0.2 coming up
 
 ## Authors
 
