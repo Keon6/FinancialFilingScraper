@@ -1,8 +1,8 @@
 # FinancialFilingScraper
-Project to extract, transform, and load (ETL) data from financial statements of publicly traded companies. So far, only supports companies listed on the NASDAQ or the NYSE, which are the ones whose filings are availabe from the U.S. Securities and Exchange Commission website (https://www.sec.gov)
+Project to extract, transform, and load (ETL) data from financial statements of publicly traded companies. So far, only supports companies listed within the US, which are the ones whose filings are availabe from the U.S. Securities and Exchange Commission website (https://www.sec.gov)
 
 ## WARNING
-The code is not finished and is pretty bad in terms of runtime. Really a lack of engineering optimization.
+CURRENTLY in development. The code is not finished and is pretty bad in terms of runtime. Really a lack of engineering optimizatiom.
 
 ## Getting Started
 ### Prerequisites
